@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ElementType } from "react";
+import React, { ElementType, useState } from "react";
 import DesignerSidebar from "./DesignerSidebar";
 import { DragEndEvent, useDndMonitor, useDroppable } from "@dnd-kit/core";
 import { cn } from "@/lib/utils";
@@ -11,6 +11,8 @@ import {
   FormElements,
 } from "./FormElements";
 import { idGenerator } from "@/lib/idGenerators";
+import { Button } from "./ui/button";
+import { BiSolidTrash } from "react-icons/bi";
 
 const Designer = () => {
   const { elements, addElement } = useDesigner();
@@ -76,6 +78,9 @@ const Designer = () => {
 };
 
 function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
+  const [mouseIsOver, setMouseIsOver] = useState<boolean>(false);
+  const { removeElement } = useDesigner();
+
   const topHalf = useDroppable({
     id: element.id + "-top",
     data: {
@@ -97,7 +102,15 @@ function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
   const DesignerElement = FormElements[element.type].designerComponent;
 
   return (
-    <div className=" relative h-[120px] flex flex-col text-foreground hover:cursor-pointer rounded-md ring-1 ring-accent ring-inset">
+    <div
+      className=" relative h-[120px] flex flex-col text-foreground hover:cursor-pointer rounded-md ring-1 ring-accent ring-inset"
+      onMouseEnter={() => {
+        setMouseIsOver(true);
+      }}
+      onMouseLeave={() => {
+        setMouseIsOver(false);
+      }}
+    >
       <div
         ref={topHalf.setNodeRef}
         className=" absolute w-full h-1/2 rounded-t-md"
@@ -106,6 +119,21 @@ function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
         ref={bottomHalf.setNodeRef}
         className=" absolute w-full bottom-0 h-1/2 rounded-t-md"
       />
+      {mouseIsOver && (
+        <>
+          <div className=" absolute right-0 h-full">
+            <Button
+              className=" flex justify-center h-full border rounded-md rounded-l-none bg-red-500"
+              variant={"outline"}
+              onClick={() => {
+                removeElement(element.id);
+              }}
+            >
+              <BiSolidTrash className=" h-6 w-6" />
+            </Button>
+          </div>
+        </>
+      )}
       <div className=" flex w-full h-[120px] items-center rounded-md bg-accent/40 px-4 pointer-events-none">
         <DesignerElement elementInstance={element} />
       </div>{" "}
