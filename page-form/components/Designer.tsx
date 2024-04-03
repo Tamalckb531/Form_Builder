@@ -62,7 +62,8 @@ const Designer = () => {
             </p>
           )}
 
-          {droppable.isOver && (
+          {/* This is the first skeleton of element in form Designer playground when we add our first element. After one element, it get vanished */}
+          {droppable.isOver && elements.length === 0 && (
             <div className=" p-4 w-full">
               <div className=" h-[120px] rounded-md bg-primary/20"></div>
             </div>
@@ -96,7 +97,7 @@ function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
   });
 
   const bottomHalf = useDroppable({
-    id: element.id + "-top",
+    id: element.id + "-bottom",
     data: {
       type: element.type,
       elementId: element.id,
@@ -112,6 +113,8 @@ function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
       isDesignerElement: true,
     },
   });
+
+  if (draggable.isDragging) return null; //while dragging no component will be shown on it's current side
 
   const DesignerElement = FormElements[element.type].designerComponent;
 
@@ -151,6 +154,9 @@ function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
           </div>
         </>
       )}
+      {topHalf.isOver && (
+        <div className=" absolute top-0 w-full rounded-md h-[7px] bg-primary rounded-b-none"></div>
+      )}
       <div
         className={cn(
           " flex w-full h-[120px] items-center rounded-md bg-accent/40 px-4 pointer-events-none",
@@ -158,7 +164,10 @@ function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
         )}
       >
         <DesignerElement elementInstance={element} />
-      </div>{" "}
+      </div>
+      {bottomHalf.isOver && (
+        <div className=" absolute bottom-0 w-full rounded-md h-[7px] bg-primary rounded-t-none"></div>
+      )}
     </div>
   );
 }
