@@ -20,7 +20,8 @@ import { Button } from "./ui/button";
 import { BiSolidTrash } from "react-icons/bi";
 
 const Designer = () => {
-  const { elements, addElement } = useDesigner();
+  const { elements, addElement, selectedElement, setSelectedElement } =
+    useDesigner();
 
   const droppable = useDroppable({
     id: "designer-drop-area",
@@ -48,7 +49,12 @@ const Designer = () => {
 
   return (
     <div className="flex w-full h-full">
-      <div className=" p-4 w-full">
+      <div
+        className=" p-4 w-full"
+        onClick={() => {
+          if (selectedElement) setSelectedElement(null);
+        }}
+      >
         <div
           ref={droppable.setNodeRef}
           className={cn(
@@ -85,7 +91,7 @@ const Designer = () => {
 
 function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
   const [mouseIsOver, setMouseIsOver] = useState<boolean>(false);
-  const { removeElement } = useDesigner();
+  const { removeElement, selectedElement, setSelectedElement } = useDesigner();
 
   const topHalf = useDroppable({
     id: element.id + "-top",
@@ -116,6 +122,7 @@ function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
 
   if (draggable.isDragging) return null; //while dragging no component will be shown on it's current side
 
+  console.log("Selected Element: ", selectedElement);
   const DesignerElement = FormElements[element.type].designerComponent;
 
   return (
@@ -129,6 +136,10 @@ function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
       }}
       onMouseLeave={() => {
         setMouseIsOver(false);
+      }}
+      onClick={(e) => {
+        e.stopPropagation();
+        setSelectedElement(element);
       }}
     >
       <div
@@ -145,7 +156,8 @@ function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
             <Button
               className=" flex justify-center h-full border rounded-md rounded-l-none bg-red-500"
               variant={"outline"}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 removeElement(element.id);
               }}
             >
