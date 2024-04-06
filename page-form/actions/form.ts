@@ -2,7 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { formSchema, formSchemaType } from "@/schemas/form";
-import { currentUser } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs"; 
 
 class UserNotFoundErr extends Error {};
 
@@ -96,3 +96,21 @@ export async function GetFormById(id: number) {
         }
     })
 }
+
+export async function UpdateFormContent(id: number, jsonContent: string) {
+    const user = await currentUser();
+    if (!user) {
+      throw new UserNotFoundErr();
+    }
+
+    return await prisma.form.update({
+        where: {
+            userId: user.id,
+            id
+        },
+        data: {
+            content: jsonContent
+        }
+    })
+}
+
