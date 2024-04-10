@@ -26,18 +26,20 @@ import {
 import { Switch } from "../ui/switch";
 import { cn } from "@/lib/utils";
 import { LuHeading1 } from "react-icons/lu";
+import { BsTextParagraph } from "react-icons/bs";
+import { Textarea } from "../ui/textarea";
 
-const type: ElementsType = "TitleField";
+const type: ElementsType = "ParagraphField";
 
 const extraAttributes = {
-  title: "Title field",
+  text: "Text here",
 };
 
 const propertiesSchema = z.object({
-  title: z.string().min(2).max(50),
+  text: z.string().min(2).max(500),
 });
 
-export const TitleFieldFormElement: FormElement = {
+export const ParagraphFieldFormElement: FormElement = {
   type,
   construct: (id: string) => ({
     id,
@@ -45,8 +47,8 @@ export const TitleFieldFormElement: FormElement = {
     extraAttributes,
   }),
   designerBtnElement: {
-    icon: LuHeading1,
-    label: "Title field",
+    icon: BsTextParagraph,
+    label: "Paragraph field",
   },
   designerComponent: DesignerComponent,
   formComponent: FormComponent,
@@ -65,11 +67,11 @@ function DesignerComponent({
   elementInstance: FormElementInstance;
 }) {
   const element = elementInstance as CustomInstance;
-  const { title } = element.extraAttributes;
+  const { text } = element.extraAttributes;
   return (
     <div className=" flex flex-col gap-2 w-full">
-      <Label className=" text-muted-foreground">Title Field</Label>
-      <div className=" text-xl">{title}</div>
+      <Label className=" text-muted-foreground">Paragraph Field</Label>
+      <div>{text}</div>
     </div>
   );
 }
@@ -81,8 +83,8 @@ function FormComponent({
 }) {
   const element = elementInstance as CustomInstance;
 
-  const { title } = element.extraAttributes;
-  return <p className=" text-xl">{title}</p>;
+  const { text } = element.extraAttributes;
+  return <p>{text}</p>;
 }
 
 // For showing properties of Element on select
@@ -98,7 +100,7 @@ function PropertiesComponent({
     resolver: zodResolver(propertiesSchema),
     mode: "onBlur",
     defaultValues: {
-      title: element.extraAttributes.title,
+      text: element.extraAttributes.text,
     },
   });
 
@@ -110,7 +112,7 @@ function PropertiesComponent({
     updateElement(element.id, {
       ...element,
       extraAttributes: {
-        title: values.title,
+        text: values.text,
       },
     });
   }
@@ -126,12 +128,13 @@ function PropertiesComponent({
       >
         <FormField
           control={form.control}
-          name="title"
+          name="text"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Title</FormLabel>
+              <FormLabel>Text</FormLabel>
               <FormControl>
-                <Input
+                <Textarea
+                  rows={5}
                   {...field}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") e.currentTarget.blur();
