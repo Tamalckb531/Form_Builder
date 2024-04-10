@@ -24,7 +24,7 @@ import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
 import Confetti from "react-confetti";
 
 const FormBuilder = ({ form }: { form: Form }) => {
-  const { setElements } = useDesigner();
+  const { setElements, setSelectedElement } = useDesigner();
   const [isReady, setIsReady] = useState(false); // For checking the elements of designer is ready or not
 
   // For deleting the element
@@ -45,15 +45,12 @@ const FormBuilder = ({ form }: { form: Form }) => {
 
   useEffect(() => {
     if (isReady) return;
-
     const elements = JSON.parse(form.content);
     setElements(elements);
-
+    setSelectedElement(null);
     const readyTimeout = setTimeout(() => setIsReady(true), 500);
-
-    //cleanup function
     return () => clearTimeout(readyTimeout);
-  }, [form, setElements]);
+  }, [form, setElements, isReady, setSelectedElement]);
 
   //? show a loading spin if the previous elements of form are not still ready
   if (!isReady) {
