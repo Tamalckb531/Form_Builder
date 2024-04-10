@@ -1,6 +1,7 @@
 import { DateFieldFormElement } from "./fields/DateField";
 import { NumberFieldFormElement } from "./fields/NumberField";
 import { ParagraphFieldFormElement } from "./fields/ParagraphField";
+import { SelectFieldFormElement } from "./fields/SelectField";
 import { SeparatorFieldFormElement } from "./fields/SeparatorField";
 import { SpacerFieldFormElement } from "./fields/SpacerField";
 import { SubTitleFieldFormElement } from "./fields/SubTitleField";
@@ -17,6 +18,7 @@ export type ElementsType =
   | "SpacerField"
   | "NumberField"
   | "TextAreaField"
+  | "SelectField"
   | "DateField";
 
 export type SubmitFunction = (key: string, value: string) => void;
@@ -69,4 +71,5 @@ export const FormElements: FormElementType = {
   NumberField: NumberFieldFormElement,
   TextAreaField: TextAreaFormElement,
   DateField: DateFieldFormElement,
+  SelectField: SelectFieldFormElement,
 };
