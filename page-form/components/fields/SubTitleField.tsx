@@ -64,7 +64,7 @@ function DesignerComponent({
   return (
     <div className=" flex flex-col gap-2 w-full">
       <Label className=" text-muted-foreground">Subtitle Field</Label>
-      <div className=" text-lg">{title}</div>
+      <p className=" text-lg">{title}</p>
     </div>
   );
 }
